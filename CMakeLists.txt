@@ -9,6 +9,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 add_executable(bardow main.c
         include/variable.h
         include/units.h
-        include/decimals.h)
+        include/decimals.h
+        include/state.h
+        include/variable_relationships.h)
 
 target_compile_options(bardow PRIVATE -Wall -Wextra -pedantic)

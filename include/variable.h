@@ -29,4 +29,6 @@ typedef union {
     unknown unknown;
 } variable;
 
+// TODO: assert in a test that size of known = unknown = variable = 16 bytes
+
 #endif //bardow_VARIABLE_H
