@@ -6,28 +6,39 @@
 #define bardow_STATE_H
 
 #include <stdint.h>
-#include "variable.h"
 
-constexpr uint8_t temperature_is_known = 0b'0000'0001;
-constexpr uint8_t pressure_is_known = 0b'0000'0010;
-constexpr uint8_t volume_is_known = 0b'0000'0100;
-constexpr uint8_t entropy_is_known = 0b'0000'1000;
-constexpr uint8_t enthalpy_is_known = 0b'0001'0000;
-constexpr uint8_t internal_energy_is_known = 0b'0010'0000;
+#ifndef bardow_DEFAULT_STATE_SIZE
+#define bardow_DEFAULT_STATE_SIZE 32
+#endif //bardow_DEFAULT_STATE_SIZE
 
-constexpr uint8_t is_stationary_process = 0b'0100'0000;
-constexpr uint8_t is_ideal_process = 0b'1000'0000;
+/**
+ * @brief Determines which uintN_t state uses. Must be one of [8, 16, 32, 64].
+ */
+#ifndef bardow_STATE_SIZE
+#define bardow_STATE_SIZE bardow_DEFAULT_STATE_SIZE
+#endif //bardow_STATE_SIZE
 
-typedef struct {
-    uint8_t flags;
-    //15 bytes padding TODO: use this space
-    variable temperature;
-    variable pressure;
-    variable volume;
-    variable entropy;
-    variable enthalpy;
-    variable internal_energy;
-    // TODO: currently 7*16 bytes in size. Not ideal. Consider redesign
-} state;
+/**
+ * @brief A bitmask representing whether up to bardow_STATE_SIZE
+ * independent variables are known or not.
+ *
+ * Each bitmask bit indicates whether the corresponding variable is known.
+ * Mapping needs to be tracked separately.
+ *
+ * If bardow_STATE_SIZE is not set, it defaults to bardow_DEFAULT_STATE_SIZE.
+ * If bardow__DEFAULT_STATE_SIZE is not set, it defaults to 32.
+ *
+ */
+#if bardow_STATE_SIZE == 8
+typedef uint8_t state;
+#elif bardow_STATE_SIZE == 16
+typedef uint16_t state;
+#elif bardow_STATE_SIZE == 32
+typedef uint32_t state;
+#elif bardow_STATE_SIZE == 64
+typedef uint64_t state;
+#else
+#error "bardow_STATE_SIZE must be 8, 16, 32 or 64"
+#endif //bardow_STATE_SIZE
 
 #endif //bardow_STATE_H
